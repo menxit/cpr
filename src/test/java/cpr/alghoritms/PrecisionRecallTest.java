@@ -50,4 +50,15 @@ public class PrecisionRecallTest extends AbstractTest {
         assertEquals(new Double(0.8), precisionRecall.getFScore());
     }
 
+    @Test
+    public void precisionRecallEmptySet() throws IOException {
+        Set<Pattern> golden = getGoldenParserTsv1().getGoldenClusters();
+        Set<Set<String>> real = new HashSet<>();
+
+        PrecisionRecall precisionRecall = new PrecisionRecallClassic(real, golden);
+        assertEquals(new Double(0), precisionRecall.getPrecision());
+        assertEquals(new Double(0), precisionRecall.getRecall());
+        assertEquals(new Double(0), precisionRecall.getFScore());
+    }
+
 }
