@@ -26,7 +26,7 @@ public class PrecisionRecallTest extends AbstractTest {
         c1.add("2");
         c2.add("3");
 
-        PrecisionRecall precisionRecall = new PrecisionRecallClassic<>(real, golden);
+        PrecisionRecall precisionRecall = new PrecisionRecallClusters<>(real, golden);
         assertEquals(new Double(1), precisionRecall.getPrecision());
         assertEquals(new Double(1), precisionRecall.getRecall());
         assertEquals(new Double(1), precisionRecall.getFScore());
@@ -44,7 +44,7 @@ public class PrecisionRecallTest extends AbstractTest {
         c1.add("2");
         c1.add("3");
 
-        PrecisionRecall precisionRecall = new PrecisionRecallClassic<>(real, golden);
+        PrecisionRecall precisionRecall = new PrecisionRecallClusters<>(real, golden);
         assertEquals(new Double(0.667), precisionRecall.getPrecision());
         assertEquals(new Double(1), precisionRecall.getRecall());
         assertEquals(new Double(0.8), precisionRecall.getFScore());
@@ -55,7 +55,7 @@ public class PrecisionRecallTest extends AbstractTest {
         Set<Pattern> golden = getGoldenParserTsv1().getGoldenClusters();
         Set<Set<String>> real = new HashSet<>();
 
-        PrecisionRecall precisionRecall = new PrecisionRecallClassic<>(real, golden);
+        PrecisionRecall precisionRecall = new PrecisionRecallClusters<>(real, golden);
         assertEquals(new Double(0), precisionRecall.getPrecision());
         assertEquals(new Double(0), precisionRecall.getRecall());
         assertEquals(new Double(0), precisionRecall.getFScore());

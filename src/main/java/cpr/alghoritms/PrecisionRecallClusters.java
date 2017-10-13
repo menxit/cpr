@@ -4,12 +4,12 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class PrecisionRecallClassic<T> implements PrecisionRecall {
+public class PrecisionRecallClusters<T> implements PrecisionRecall {
 
     private final Set<Set<T>> founded;
     private final Set<Set<T>> golden;
 
-    public PrecisionRecallClassic(Set<Set<T>> founded, Set<Pattern> golden) {
+    public PrecisionRecallClusters(Set<Set<T>> founded, Set<Pattern> golden) {
         this.founded = founded;
 
         Set<T> flatten = this.flattenSet(founded);
@@ -27,43 +27,6 @@ public class PrecisionRecallClassic<T> implements PrecisionRecall {
         });
 
         this.golden = new HashSet<>(mapGolden.values());
-    }
-
-    /**
-     * Returns a flatten set.
-     *
-     * @param set
-     * @return
-     */
-    private Set<T> flattenSet(Set<Set<T>> set) {
-        return set
-            .parallelStream()
-            .flatMap(Set::stream)
-            .collect(Collectors.toSet());
-    }
-
-    /**
-     * Returns the intersection between two set.
-     *
-     * @param set1
-     * @param set2
-     * @return
-     */
-    private Set<T> intersection(Set<T> set1, Set<T> set2) {
-        Set<T> result = new HashSet<>();
-        result.addAll(set1);
-        result.retainAll(set2);
-        return result;
-    }
-
-    /**
-     * Returns an approximated double.
-     *
-     * @param N
-     * @return
-     */
-    private Double approximate(Double N) {
-        return Math.round(N*1000D)/1000D;
     }
 
     @Override
@@ -103,4 +66,32 @@ public class PrecisionRecallClassic<T> implements PrecisionRecall {
 
         return this.approximate((2*P*R)/(P+R));
     }
+
+    /**
+     * Returns a flatten set.
+     *
+     * @param set
+     * @return
+     */
+    private Set<T> flattenSet(Set<Set<T>> set) {
+        return set
+                .parallelStream()
+                .flatMap(Set::stream)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Returns the intersection between two set.
+     *
+     * @param set1
+     * @param set2
+     * @return
+     */
+    private Set<T> intersection(Set<T> set1, Set<T> set2) {
+        Set<T> result = new HashSet<>();
+        result.addAll(set1);
+        result.retainAll(set2);
+        return result;
+    }
+
 }

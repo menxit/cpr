@@ -23,4 +23,14 @@ public interface PrecisionRecall {
      */
     Double getFScore();
 
+    /**
+     * Returns an approximated double.
+     *
+     * @param N
+     * @return
+     */
+    default Double approximate(Double N) {
+        return Math.round(N*1000D)/1000D;
+    }
+
 }
