@@ -4,21 +4,22 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class PrecisionRecallClassic implements PrecisionRecall {
+public class PrecisionRecallClassic<T> implements PrecisionRecall {
 
-    private final Set<String> flatten;
-    private final Set<Set<String>> real;
-    private final Set<Set<String>> golden;
+    private final Set<Set<T>> founded;
+    private final Set<Set<T>> golden;
 
-    public PrecisionRecallClassic(Set<Set<String>> real, Set<Pattern> golden) {
-        this.flatten = this.flattenSet(real);
-        this.real = real;
-        Map<Pattern, Set<String>> mapGolden = new HashMap<>();
+    public PrecisionRecallClassic(Set<Set<T>> founded, Set<Pattern> golden) {
+        this.founded = founded;
 
-        this.flatten.forEach(element -> {
+        Set<T> flatten = this.flattenSet(founded);
+
+        Map<Pattern, Set<T>> mapGolden = new HashMap<>();
+
+        flatten.forEach(element -> {
             Pattern p = golden
                 .parallelStream()
-                .filter(g -> g.matcher(element).matches())
+                .filter(g -> g.matcher(element.toString()).matches())
                 .findFirst()
                 .get();
             mapGolden.putIfAbsent(p, new HashSet<>());
@@ -28,27 +29,46 @@ public class PrecisionRecallClassic implements PrecisionRecall {
         this.golden = new HashSet<>(mapGolden.values());
     }
 
-    private Set<String> flattenSet(Set<Set<String>> set) {
+    /**
+     * Returns a flatten set.
+     *
+     * @param set
+     * @return
+     */
+    private Set<T> flattenSet(Set<Set<T>> set) {
         return set
             .parallelStream()
             .flatMap(Set::stream)
             .collect(Collectors.toSet());
     }
 
-    private Set<String> intersection(Set<String> r, Set<String> g) {
-        Set<String> result = new HashSet<>();
-        result.addAll(r);
-        result.retainAll(g);
+    /**
+     * Returns the intersection between two set.
+     *
+     * @param set1
+     * @param set2
+     * @return
+     */
+    private Set<T> intersection(Set<T> set1, Set<T> set2) {
+        Set<T> result = new HashSet<>();
+        result.addAll(set1);
+        result.retainAll(set2);
         return result;
     }
 
+    /**
+     * Returns an approximated double.
+     *
+     * @param N
+     * @return
+     */
     private Double approximate(Double N) {
         return Math.round(N*1000D)/1000D;
     }
 
     @Override
     public Double getRecall() {
-        Double result = this.real
+        Double result = this.founded
             .parallelStream()
             .mapToDouble(r ->
                 this.golden
@@ -58,12 +78,12 @@ public class PrecisionRecallClassic implements PrecisionRecall {
                     .getAsDouble()
             ).sum();
 
-        return this.approximate(result/this.real.size());
+        return this.approximate(result/this.founded.size());
     }
 
     @Override
     public Double getPrecision() {
-        Double result = this.real
+        Double result = this.founded
             .parallelStream()
             .mapToDouble(r ->
                 this.golden
@@ -73,7 +93,7 @@ public class PrecisionRecallClassic implements PrecisionRecall {
                     .getAsDouble()
             ).sum();
 
-        return this.approximate(result/this.real.size());
+        return this.approximate(result/this.founded.size());
     }
 
     @Override

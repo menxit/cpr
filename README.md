@@ -42,7 +42,7 @@ class Example {
         c1.add("2");
         c2.add("3");
 
-        PrecisionRecall precisionRecall = new PrecisionRecallClassic(real, golden);
+        PrecisionRecall precisionRecall = new PrecisionRecallClassic<>(real, golden);
         assertEquals(new Double(1), precisionRecall.getPrecision());
         assertEquals(new Double(1), precisionRecall.getRecall());
         assertEquals(new Double(1), precisionRecall.getFScore());

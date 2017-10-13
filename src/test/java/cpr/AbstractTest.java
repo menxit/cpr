@@ -15,6 +15,10 @@ public class AbstractTest {
         return new GolderParserTSV(getReader("/golden_test1.tsv"));
     }
 
+    protected static GoldenParser getGoldenParserWrongTsv() throws IOException {
+        return new GolderParserTSV(getReader("/wrong_golden_test1.tsv"));
+    }
+
     protected static GoldenParser getGoldenParserCsv1() throws IOException {
         return new GolderParserCSV(getReader("/golden_test1.csv"));
     }
